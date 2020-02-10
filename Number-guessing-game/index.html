@@ -1,0 +1,118 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+
+
+
+    </script>
+</head>
+<body>
+    <div>
+        <h1>Number guessing game</h1>
+       <p> We have selected a random number between 1 and 100. 
+        See if you can guess it in 10 turns or fewer. We'll tell you if your guess was too high or too low.</p>
+        
+        
+    <div class="form">
+        <label for="guessField">Enter a guess: </label><input type="text" id="guessField" class="guessField">
+        <input type="submit" value="Submit guess" class="guessSubmit">
+      </div>
+  
+      <div class="resultParas">
+        <p class="guesses"></p>
+        <p class="lastResult"></p>
+        <p class="lowOrHi"></p>
+      </div>
+  
+      
+    </div>
+    <script>
+
+        let randomNumber = Math.floor(Math.random() * 100) + 1;
+
+        const guesses = document.querySelector(".guesses");
+        const lastResult = document.querySelector(".lastResult");
+        const lowOrHi = document.querySelector(".lowOrHi");
+
+        const guessSubmit = document.querySelector(".guessSubmit");
+        const guessField = document.querySelector(".guessField");
+
+        let guessCount = 1;
+        let resetButton;
+
+        function checkGuess(){
+            let userGuess = Number(guessField.value)
+
+            if(guessCount === 1){
+                guesses.textContent = "Previous Guesses:";
+            }
+            guesses.textContent +=userGuess + '';
+
+            if( userGuess === randomNumber)
+            {
+                lastResult.textContent = "Congratulation! You Got it Right";
+                lastResult.style.backgroundColor = "Green";
+                lowOrHi.textContent = '';
+                setGameOver();
+            }else if(guessCount === 10){
+                lastResult.textContent = "!!!Game Over !!!";
+                setGameOver();
+            }
+            else{
+                lastResult.textContent = "!Wrong!";
+                lastResult.style.backgroundColor = "red";
+                if(userGuess < randomNumber){
+                    lowOrHi.textContent = "Last Guess was too low!";
+                }else if (userGuess > randomNumber){
+                    lowOrHi.textContent = "Last Guess was too high!";
+                }
+            }
+
+            guessCount++;
+            guessField.value = '';
+            guessField.focus();
+
+        }
+        guessSubmit.addEventListener('click', checkGuess);
+
+        function setGameOver(){
+            // Disable the text input
+            guessField.disabled = true;
+            guessSubmit.disabled = true;
+            // Generate New Button
+            resetButton = document.createElement("button");
+            // set label to start new game
+            resetButton.textContent = "Start New Game";
+            // add it to the bottom of existing HTML
+            document.body.appendChild(resetButton);
+            // sets an event listener so when it's clicked fuction resetGame is run
+            resetButton.addEventListener("click", resetGame);
+        }
+
+        function resetGame(){
+            //set count back down to 1
+            guessCount = 1;
+            //Empities all text
+            const resetParas = document.querySelectorAll(".resultParas p");
+            for (let i= 0; i < resetParas.length; i++){
+                resetParas[i].textContent = "";
+            }
+
+            //removes reset button
+            resetButton.parentNode.removeChild(resetButton);
+
+            guessField.disabled = false;
+            guessSubmit.disabled = false;
+            guessField.value = "";
+            guessField.focus();
+            //remove bg color
+            lastResult.style.backgroundColor = "White";
+            //Generates a new random number so that you are not just guessing the same number again
+            randomNumber = Math.floor(Math.random() * 100) + 1;
+        }
+    </script>
+</body>
+</html>
